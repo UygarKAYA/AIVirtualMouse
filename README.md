@@ -1,2 +1,2 @@
-# AIVirtualMouse
-AI based mouse controller using hand landmarks
+## _AI Virtual Mouse_
+***AI based mouse controller using hand landmark***
