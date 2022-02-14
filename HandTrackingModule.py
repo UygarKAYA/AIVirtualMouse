@@ -16,6 +16,7 @@ class HandDetector:
         self.hands = self.mpHands.Hands(self.static_image_mode, self.max_num_hads, self.model_complexity,
                                         self.min_detection_confidence, self.min_tracking_confidence)
         self.mpDraw = mp.solutions.drawing_utils
+        self.myFingers = [4, 8, 12, 16, 20]
 
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -28,19 +29,35 @@ class HandDetector:
         return img
 
     def findLocation(self, img, handNumber=0, draw=True):
-        landmarksList = []
+        self.landmarksList = []
 
         if self.result.multi_hand_landmarks:
             myHands = self.result.multi_hand_landmarks[handNumber]
             for ID, landmark in enumerate(myHands.landmark):
                 height, weight, channel = img.shape
                 cx, cy = int(landmark.x * weight), int(landmark.y * height)
-                landmarksList.append([ID, cx, cy])
+                self.landmarksList.append([ID, cx, cy])
 
                 if draw:
                     cv2.circle(img, (cx, cy), 1, (0, 0, 255), cv2.FILLED)
 
-        return landmarksList
+        return self.landmarksList
+
+    def findUpDownFingers(self):
+        fingers = []
+
+        if self.landmarksList[self.myFingers[0]][1] > self.landmarksList[self.myFingers[0]-1][1]:
+            fingers.append(1)
+        else:
+            fingers.append(0)
+
+        for ıd in range(1, 5):
+            if self.landmarksList[self.myFingers[ıd]][2] < self.landmarksList[self.myFingers[ıd]-2][2]:
+                fingers.append(1)
+            else:
+                fingers.append(0)
+
+        return fingers
 
 
 def main():

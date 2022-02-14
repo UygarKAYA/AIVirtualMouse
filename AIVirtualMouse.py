@@ -12,7 +12,11 @@ while True:
     lmList = detector.findLocation(img, draw=False)
 
     if len(lmList) != 0:
-        pass
+        x8, y8 = lmList[8][1:]
+        x12, y12 = lmList[12][1:]
+
+        fingers = detector.findUpDownFingers()
+        print(fingers)
 
     cTime = time.time()
     fps = 1/(cTime-pTime)
